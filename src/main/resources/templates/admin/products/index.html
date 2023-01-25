@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragment/head"></head>
+<body>
+	<nav th:replace="/fragment/nav :: nav-admin"></nav>
+	<!-- /container -->
+	<div class="container">
+		<h1 class="display-2">Products</h1>
+		<a href="/admin/products/add" class="btn btn-primary mb-5">Add New</a>
+
+		<div th:if="${message}" th:text="${message}"
+			th:class="${'alert '+alertClass}"></div>
+
+		<div th:if="${!products.empty}">
+			<table class="table">
+				<tr>
+					<th>Name</th>
+					<th>Image</th>
+					<th>Category</th>
+					<th>Price</th>
+					<th>Edit</th>
+					<th>Delete</th>
+				</tr>
+				<tr th:each="product : ${products}">
+					<td th:text="${product.name}"></td>
+					<td><img style="width: 80px; height: 80px;" alt=""
+						th:src="@{'/media/'+${product.image}}"></td>
+					<!-- <td th:text="${product.categoryId}"></td> -->
+					<td th:text="${cats[__${product.categoryId}__]}"></td>
+					<td th:text="'$ '+${product.price}"></td>
+					<td><a th:href="@{'/admin/products/edit/'+${product.id}}">Edit</a></td>
+					<td><a th:href="@{'/admin/products/delete/'+${product.id}}"
+						class="confirmDeletion">Delete</a></td>
+				</tr>
+			</table>
+
+			<nav aria-label="Page navigation example" th:if="${count > perPage}">
+
+				<ul class="pagination">
+
+					<li th:if="${page != 0}" class="page-item"><a
+						th:href="@{'/admin/products/'+${page-1}}" class="page-link"
+						href="#">Previous</a></li>
+
+					<li th:classappend="${page==i-1?'active':''}"
+						th:each="i : ${#numbers.sequence(1, totalPages)}"
+						class="page-item"><a th:href="@{'/admin/products/'+${i-1}}"
+						class="page-link" href="#"><span th:text="${i}"></span></a></li>
+
+					<li th:if="${page+1 != totalPages}" class="page-item"><a
+						th:href="@{'/admin/products/'+${page+1}}" class="page-link"
+						href="#">Next</a></li>
+
+				</ul>
+
+			</nav>
+
+		</div>
+
+		<div th:unless="${!products.empty}">
+			<h4 class="display-4">There are no products at this moment</h4>
+		</div>
+
+	</div>
+	<footer th:replace="/fragment/footer"></footer>
+
+</body>
+</html>
